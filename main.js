@@ -12,14 +12,21 @@ console.log('version 1.0');
 const state = {
     result: null,
     points: 0,
+    gridSize: 10,
+    board: null,
+    wordsAcross: null,
+    wordsDown: null,
+    userAcross: null,
+    userDown: null,
 };
 
 
-/*------------------------- cached elements  -------------------------*/
+/*------------------------- cached elements -------------------------*/
 const elements = {
     // diagramContainer: document.getElementById('diagram-container'),
     message: document.getElementById('message-container'),
     points: document.getElementById('points-container'),
+    board: document.getElementById('board-container'),
     playAgain: document.getElementById('play-again'), // The play again button
 };
 
@@ -35,26 +42,18 @@ init();
 function init () {
     state.result = null;
     state.points = 0;
+    state.gridSize = 10;
+    state.board = null;
+    state.wordsAcross = null;
+    state.wordsDown = null;
+    state.userAcross = null;
+    state.userDown = null;
     
     render();
 }
 
 
-function handleCheckGuess(event) {
-    // If the game has already been won or lost, exit the function:
-    if (state.result !== null) return;
-    
-    // Code to go here:
-    
-    // Empty out the input field:
-    elements.currentWord.value = '';
-
-    // Check for winner:
-    state.result = checkWinner();
-
-    // Run render():
-    render();
-}
+// Add generate board function?
 
 
 function checkWinner() {
@@ -65,10 +64,14 @@ function checkWinner() {
 
 
 function render() {
-    renderLetters();
-    renderWords();
+    renderBoard();
     renderMessage();
     renderPoints();
+}
+
+
+function renderBoard() {
+    
 }
 
 
