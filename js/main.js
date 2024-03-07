@@ -65,13 +65,37 @@ function checkWinner() {
 
 function render() {
     renderBoard();
-    renderMessage();
+    // renderMessage();
     renderPoints();
 }
 
 
 function renderBoard() {
-    
+    // Note: to be refactored to use the actual board not the grid size.
+
+    for (let i = 0; i < state.gridSize; i++) {
+        rowElement = document.createElement('div');
+        rowElement.classList.add('flex', 'flex-row', 'justify-center');
+        // rowElement.classList.add('key-letter', 'bg-yellow-400');
+
+        for (let j = 0; j < state.gridSize; j++) {
+            squareElement = document.createElement('div');
+            squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'flex', 'justify-center');
+            // squareElement.classList.add('key-letter', 'bg-yellow-400');
+            
+            if (Math.random() > 0.5) {
+                squareElement.classList.add('bg-black');
+                squareElement.innerText = '_';
+            } else {
+                squareElement.classList.add('bg-white');
+                squareElement.innerText = 'A';
+            }
+
+            rowElement.appendChild(squareElement);
+        }
+
+        elements.board.appendChild(rowElement);
+    }
 }
 
 
