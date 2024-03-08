@@ -12,7 +12,7 @@ console.log('version 1.0');
 const state = {
     result: null,
     points: 0,
-    gridSize: 10,
+    gridSize: 20,
     board: null,
     wordsAcross: null,
     wordsDown: null,
@@ -42,8 +42,8 @@ init();
 function init () {
     state.result = null;
     state.points = 0;
-    state.gridSize = 10;
-    state.board = null;
+    state.gridSize = 20;
+    state.board = generateBoard(state.gridSize);
     state.wordsAcross = null;
     state.wordsDown = null;
     state.userAcross = null;
@@ -53,10 +53,49 @@ function init () {
 }
 
 
-// Add generate board function?
+// Function to generate a blank board at the start of the game:
+function generateBoard(gridSize) {
+    const blankBoard = [];
+    const blankRow = [];
 
+    // Create a blank row of length 'n' (n = gridSize):
+    for (let i = 0; i < gridSize; i++) {
+        blankRow.push('');
+    }
+    
+    // Add the blank row to the board 'n' number of times (n = gridSize):
+    for (let i = 0; i < gridSize; i++) {
+        blankBoard.push(blankRow)
+    }
 
+    return blankBoard;
+}
+
+// Function to retrieve a random word of a given length, return the word and it's definition:
+function retrieveWord(length) {
+    const word = {};
+
+    // Save ALL of the words with the correct length:
+    const wordsCorrectLength = [];
+    for (let word in ALL_WORDS) {
+        if (word.length == length) {
+            wordsCorrectLength.push(word);
+            console.log(`${ word } is a word with ${ length } letters`);
+        };
+    };
+
+    console.log(wordsCorrectLength);
+
+    word['word'] = wordsCorrectLength[ Math.floor( Math.random() * wordsCorrectLength.length ) ];
+    word['definition'] = ALL_WORDS[word.word];
+
+    return word;
+}
+
+// Function to chcek if the puzzle has been finished:
 function checkWinner() {
+    // NOTE: TO BE REVISED
+
     // Check if all the words have been guessed:
     result = state.validWords.every(word => state.correctGuesses.includes(word));
     return result ? true : null;
@@ -71,24 +110,25 @@ function render() {
 
 
 function renderBoard() {
-    // Note: to be refactored to use the actual board not the grid size.
-
+    // Loop through the rows of the board and make a div for each row:
     for (let i = 0; i < state.gridSize; i++) {
         rowElement = document.createElement('div');
         rowElement.classList.add('flex', 'flex-row', 'justify-center');
         // rowElement.classList.add('key-letter', 'bg-yellow-400');
-
+        
+        // Loop through the 'sqaures' on each row and make a div for each square:
         for (let j = 0; j < state.gridSize; j++) {
             squareElement = document.createElement('div');
-            squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'flex', 'justify-center');
+            squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'py', 'flex', 'justify-center');
             // squareElement.classList.add('key-letter', 'bg-yellow-400');
+            squareElement.innerText = state.board[i][j];
             
             if (Math.random() > 0.5) {
                 squareElement.classList.add('bg-black');
-                squareElement.innerText = '_';
+                // squareElement.innerText = '_';
             } else {
                 squareElement.classList.add('bg-white');
-                squareElement.innerText = 'A';
+                // squareElement.innerText = 'A';
             }
 
             rowElement.appendChild(squareElement);
