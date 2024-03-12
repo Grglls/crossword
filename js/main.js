@@ -13,11 +13,13 @@ const state = {
     result: null,
     points: 0,
     gridSize: 20,
-    board: null,
+    boardSolution: null,
+    boardUser: null,
+    boardNumbers: null,
     wordsAcross: null,
     wordsDown: null,
-    userAcross: null,
-    userDown: null,
+    // userAcross: null,
+    // userDown: null,
 };
 
 
@@ -42,19 +44,21 @@ init();
 function init () {
     state.result = null;
     state.points = 0;
-    state.gridSize = 20;
-    state.board = generateBoard(state.gridSize);
+    state.gridSize = 5;
+    state.boardSolution = createCrossword(state.gridSize);
+    state.boardNumbers = createNumbers(state.gridSize);
+    state.boardUser = generateBlankBoard(state.gridSize);
     state.wordsAcross = null;
     state.wordsDown = null;
-    state.userAcross = null;
-    state.userDown = null;
+    // state.userAcross = null;
+    // state.userDown = null;
     
     render();
 }
 
 
 // Function to generate a blank board at the start of the game:
-function generateBoard(gridSize) {
+function generateBlankBoard(gridSize) {
     const blankBoard = [];
     const blankRow = [];
 
@@ -70,6 +74,47 @@ function generateBoard(gridSize) {
 
     return blankBoard;
 }
+
+
+// Function to create the crossword puzzle:
+function createCrossword(gridSize) {
+    // Start with a blank board:
+    const board = generateBlankBoard(gridSize);
+    
+    // To be revised with algorithms to pull words from the dictionary:
+    for (let i = 0; i < gridSize; i++) {
+        console.log('----------------------------------------');
+        for (let j = 0; j < gridSize; j++) {
+            const test = Math.floor( Math.random() * 1000) / 1000;
+            console.log(`the random number is ${ test }`)
+            if (test > 0.5) {
+                board[i][j] = test;
+            } else {
+                board[i][j] = test;
+            }
+        }
+    }
+    
+    return board;
+}
+
+
+// Function to generate a matrix of numbers for the board positions:
+function createNumbers(gridSize) {
+    // Start with a blank board:
+    const board = generateBlankBoard(gridSize);
+    
+    // To be revised with algorithms to pull words from the dictionary:
+    for (let i = 0; i < gridSize; i++) {
+        console.log('----------------------------------------');
+        for (let j = 0; j < gridSize; j++) {
+            board[i][j] = gridSize * i + j;
+        }
+    }
+    
+    return board;
+}
+
 
 // Function to retrieve a random word of a given length, return the word and it's definition:
 function retrieveWord(length) {
@@ -92,6 +137,7 @@ function retrieveWord(length) {
     return word;
 }
 
+
 // Function to chcek if the puzzle has been finished:
 function checkWinner() {
     // NOTE: TO BE REVISED
@@ -110,6 +156,9 @@ function render() {
 
 
 function renderBoard() {
+    // Empty out the board:
+    elements.board.innerHTML = '';
+    
     // Loop through the rows of the board and make a div for each row:
     for (let i = 0; i < state.gridSize; i++) {
         rowElement = document.createElement('div');
@@ -121,15 +170,13 @@ function renderBoard() {
             squareElement = document.createElement('div');
             squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'py', 'flex', 'justify-center');
             // squareElement.classList.add('key-letter', 'bg-yellow-400');
-            squareElement.innerText = state.board[i][j];
-            
-            if (Math.random() > 0.5) {
+            squareElement.innerText = state.boardSolution[i][j];
+
+            if (state.boardSolution[i][j] == 'A') {
                 squareElement.classList.add('bg-black');
-                // squareElement.innerText = '_';
             } else {
                 squareElement.classList.add('bg-white');
-                // squareElement.innerText = 'A';
-            }
+            }  
 
             rowElement.appendChild(squareElement);
         }
