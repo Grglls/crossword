@@ -60,15 +60,16 @@ function init () {
 // Function to generate a blank board at the start of the game:
 function generateBlankBoard(gridSize) {
     const blankBoard = [];
-    const blankRow = [];
-
-    // Create a blank row of length 'n' (n = gridSize):
-    for (let i = 0; i < gridSize; i++) {
-        blankRow.push('');
-    }
     
     // Add the blank row to the board 'n' number of times (n = gridSize):
     for (let i = 0; i < gridSize; i++) {
+        const blankRow = [];
+        
+        // Create a blank row of length 'n' (n = gridSize):
+        for (let i = 0; i < gridSize; i++) {
+            blankRow.push('A');
+        }
+        
         blankBoard.push(blankRow)
     }
 
@@ -80,18 +81,16 @@ function generateBlankBoard(gridSize) {
 function createCrossword(gridSize) {
     // Start with a blank board:
     const board = generateBlankBoard(gridSize);
+
+    const alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
     
     // To be revised with algorithms to pull words from the dictionary:
+    // Assign random letter to each square for testing purposes:
     for (let i = 0; i < gridSize; i++) {
-        console.log('----------------------------------------');
         for (let j = 0; j < gridSize; j++) {
-            const test = Math.floor( Math.random() * 1000) / 1000;
-            console.log(`the random number is ${ test }`)
-            if (test > 0.5) {
-                board[i][j] = test;
-            } else {
-                board[i][j] = test;
-            }
+            const randomNum = Math.floor( Math.random() * 26 );
+            // const randomNum = Math.floor( Math.random() * 1000) / 1000;
+            board[i][j] = alphabet[randomNum];
         }
     }
     
@@ -102,17 +101,16 @@ function createCrossword(gridSize) {
 // Function to generate a matrix of numbers for the board positions:
 function createNumbers(gridSize) {
     // Start with a blank board:
-    const board = generateBlankBoard(gridSize);
+    const boardNumbers = generateBlankBoard(gridSize);
     
-    // To be revised with algorithms to pull words from the dictionary:
+    // Assign an integer to each square:
     for (let i = 0; i < gridSize; i++) {
-        console.log('----------------------------------------');
         for (let j = 0; j < gridSize; j++) {
-            board[i][j] = gridSize * i + j;
+            boardNumbers[i][j] = gridSize * i + j;
         }
     }
     
-    return board;
+    return boardNumbers;
 }
 
 
@@ -156,7 +154,7 @@ function render() {
 
 
 function renderBoard() {
-    // Empty out the board:
+    // Empty out the board each render:
     elements.board.innerHTML = '';
     
     // Loop through the rows of the board and make a div for each row:
@@ -168,9 +166,26 @@ function renderBoard() {
         // Loop through the 'sqaures' on each row and make a div for each square:
         for (let j = 0; j < state.gridSize; j++) {
             squareElement = document.createElement('div');
-            squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'py', 'flex', 'justify-center');
+            squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-10', 'w-10', 'py', 'space-y-0');
+            // squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'py', 'flex', 'flex-col', 'justify-center');
+            
+            numberElement = document.createElement('div');
+            numberElement.innerText = state.boardNumbers[i][j];
+            numberElement.classList.add('text-xs');
+            // numberElement.classList.add('bg-yellow-400');
+            // numberElement.classList.add('p-0', 'm-0');
+            numberElement.classList.add('leading-none');
+            
+            letterElement = document.createElement('div');
+            letterElement.innerText = state.boardSolution[i][j];
+            letterElement.classList.add('text-center', 'p-0', 'm-0');
+            letterElement.classList.add('leading-none');
+            letterElement.classList.add('font-bold');
+            letterElement.classList.add('text-xl');
             // squareElement.classList.add('key-letter', 'bg-yellow-400');
-            squareElement.innerText = state.boardSolution[i][j];
+            
+            squareElement.appendChild(numberElement);
+            squareElement.appendChild(letterElement);
 
             if (state.boardSolution[i][j] == 'A') {
                 squareElement.classList.add('bg-black');
