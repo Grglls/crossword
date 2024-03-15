@@ -18,6 +18,7 @@ const state = {
     boardNumbers: null,
     wordsAcross: null,
     wordsDown: null,
+    activeSquare: null,
     // userAcross: null,
     // userDown: null,
 };
@@ -35,6 +36,9 @@ const elements = {
 
 /*------------------------- event listeners -------------------------*/
 elements.playAgain.addEventListener('click', init);
+elements.board.addEventListener('click', handleClick);
+document.addEventListener('keydown', handleKeypress);
+// document.addEventListener('keypress', handleLetterKeypress);
 
 
 /*------------------------- functions -------------------------*/
@@ -50,9 +54,86 @@ function init () {
     state.boardUser = generateBlankBoard(state.gridSize);
     state.wordsAcross = null;
     state.wordsDown = null;
+    state.activeSquare = null;
     // state.userAcross = null;
     // state.userDown = null;
     
+    render();
+}
+
+
+// Function to set the highlighted square when a sqaure is clicked:
+function handleClick(event) {
+    console.log(event.target.id);
+    
+    // If the id is a number, exit the function:
+    if (parseInt(event.target.id) >= 0) {
+        // Save the id of the clicked square as the active square:
+        state.activeSquare = event.target.id;
+        console.log(`active square is currently: ${state.activeSquare}`);
+
+        // Re-render the board:
+        render();
+    }
+}
+
+
+function handleKeypress(event) {
+    console.log(event.keyCode);
+    // Convert the index number of the active square into i and j indices:
+    let indexJ = state.activeSquare % state.gridSize;
+    let indexI = (state.activeSquare - indexJ )/ state.gridSize;
+    console.log(`The i index is: ${ indexI }`);
+    console.log(`The j index is: ${ indexJ }`);
+    
+    // First handle the arrow keys, for navigation:
+    if (event.keyCode >= 37 && event.keyCode <= 40) {
+        console.log('Key was an arrow');
+        // Handle left arrow key:
+        if (event.keyCode == 37) {
+            if (indexJ == 0){
+                indexJ = state.gridSize - 1;
+            } else {
+                indexJ -= 1;
+            }
+            // Handle right arrow key:
+        } else if (event.keyCode == 39) {
+            if (indexJ == state.gridSize - 1) {
+                indexJ = 0;
+            } else {
+                indexJ += 1;
+            }
+            // Handle up arrow key:
+        } else if (event.keyCode == 38) {
+            if (indexI == 0) {
+                indexI = state.gridSize - 1;
+            } else {
+                indexI -= 1;
+            }
+            // Handle down arrow key:
+        } else if (event.keyCode == 40) {
+            if (indexI == state.gridSize - 1) {
+                indexI = 0;
+            } else {
+                indexI += 1;
+            }
+        } 
+        
+        // Recalculate the active square index number:
+        state.activeSquare = state.gridSize * indexI + indexJ;
+    }
+    
+    // Then handle the letter keys, for typing a letter:
+    if (event.keyCode >= 65 && event.keyCode <= 90) {
+        console.log('Key was a letter');
+        
+        // Set the active square to the letter pressed by the user:
+        
+        
+        console.table(state.boardUser);
+    }
+    
+    // Re-render the board:
     render();
 }
 
@@ -161,32 +242,33 @@ function renderBoard() {
     for (let i = 0; i < state.gridSize; i++) {
         rowElement = document.createElement('div');
         rowElement.classList.add('flex', 'flex-row', 'justify-center');
-        // rowElement.classList.add('key-letter', 'bg-yellow-400');
         
         // Loop through the 'sqaures' on each row and make a div for each square:
         for (let j = 0; j < state.gridSize; j++) {
             squareElement = document.createElement('div');
             squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-10', 'w-10', 'py', 'space-y-0');
-            // squareElement.classList.add('border-solid', 'border', 'border-slate-800', 'h-8', 'w-8', 'py', 'flex', 'flex-col', 'justify-center');
+            squareElement.id = state.boardNumbers[i][j];
+            
+            // If the square is the active square, highlight it in yellow:
+            if (state.boardNumbers[i][j] == state.activeSquare) {
+                squareElement.classList.add('bg-yellow-400');
+            }
             
             numberElement = document.createElement('div');
             numberElement.innerText = state.boardNumbers[i][j];
-            numberElement.classList.add('text-xs');
-            // numberElement.classList.add('bg-yellow-400');
-            // numberElement.classList.add('p-0', 'm-0');
-            numberElement.classList.add('leading-none');
+            numberElement.classList.add('leading-none', 'text-xs');
+            numberElement.id = state.boardNumbers[i][j];
             
             letterElement = document.createElement('div');
             letterElement.innerText = state.boardSolution[i][j];
             letterElement.classList.add('text-center', 'p-0', 'm-0');
-            letterElement.classList.add('leading-none');
-            letterElement.classList.add('font-bold');
-            letterElement.classList.add('text-xl');
-            // squareElement.classList.add('key-letter', 'bg-yellow-400');
+            letterElement.classList.add('leading-none', 'text-xl', 'font-bold');
+            letterElement.id = state.boardNumbers[i][j];
             
             squareElement.appendChild(numberElement);
             squareElement.appendChild(letterElement);
 
+            // To be revised in future to use 'blank' value to trigger black background.
             if (state.boardSolution[i][j] == 'A') {
                 squareElement.classList.add('bg-black');
             } else {
