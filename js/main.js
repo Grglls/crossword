@@ -128,7 +128,7 @@ function handleKeypress(event) {
         console.log('Key was a letter');
         
         // Set the active square to the letter pressed by the user:
-        
+        state.boardUser[indexI][indexJ] = String.fromCharCode(event.keyCode);
         
         console.table(state.boardUser);
     }
@@ -148,7 +148,7 @@ function generateBlankBoard(gridSize) {
         
         // Create a blank row of length 'n' (n = gridSize):
         for (let i = 0; i < gridSize; i++) {
-            blankRow.push('A');
+            blankRow.push('_');
         }
         
         blankBoard.push(blankRow)
@@ -169,9 +169,13 @@ function createCrossword(gridSize) {
     // Assign random letter to each square for testing purposes:
     for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
-            const randomNum = Math.floor( Math.random() * 26 );
-            // const randomNum = Math.floor( Math.random() * 1000) / 1000;
-            board[i][j] = alphabet[randomNum];
+            if ( Math.random() > 0.1 ) {
+                const randomNum = Math.floor( Math.random() * 26 );
+                // const randomNum = Math.floor( Math.random() * 1000) / 1000;
+                board[i][j] = alphabet[randomNum];
+            } else {
+                board[i][j] = '_';
+            }
         }
     }
     
@@ -229,7 +233,7 @@ function checkWinner() {
 
 function render() {
     renderBoard();
-    // renderMessage();
+    renderMessage();
     renderPoints();
 }
 
@@ -260,7 +264,7 @@ function renderBoard() {
             numberElement.id = state.boardNumbers[i][j];
             
             letterElement = document.createElement('div');
-            letterElement.innerText = state.boardSolution[i][j];
+            letterElement.innerText = state.boardUser[i][j];
             letterElement.classList.add('text-center', 'p-0', 'm-0');
             letterElement.classList.add('leading-none', 'text-xl', 'font-bold');
             letterElement.id = state.boardNumbers[i][j];
@@ -269,7 +273,7 @@ function renderBoard() {
             squareElement.appendChild(letterElement);
 
             // To be revised in future to use 'blank' value to trigger black background.
-            if (state.boardSolution[i][j] == 'A') {
+            if (state.boardSolution[i][j] == '_') {
                 squareElement.classList.add('bg-black');
             } else {
                 squareElement.classList.add('bg-white');
@@ -287,7 +291,7 @@ function renderMessage() {
     // Clear out the previous message:
     elements.message.innerHTML = '';
 
-    // Render the number of correctly guessed words and the total possible:
+    // Create the message in a new element:
     const text = `${state.correctGuesses.length} out of ${state.validWords.length} words`;
     messageElement = document.createElement('div');
     messageElement.innerText = text;
