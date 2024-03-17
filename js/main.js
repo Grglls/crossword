@@ -51,7 +51,7 @@ function init () {
     state.gridSize = 5;
     state.boardSolution = createCrossword(state.gridSize);
     state.boardNumbers = createNumbers(state.gridSize);
-    state.boardUser = generateBlankBoard(state.gridSize);
+    state.boardUser = createUserBoard(state.gridSize);
     state.wordsAcross = null;
     state.wordsDown = null;
     state.activeSquare = null;
@@ -78,6 +78,7 @@ function handleClick(event) {
 }
 
 
+// Function to handle when user types a letter or navigates using the arrow keys:
 function handleKeypress(event) {
     console.log(event.keyCode);
     // Convert the index number of the active square into i and j indices:
@@ -133,6 +134,9 @@ function handleKeypress(event) {
         console.table(state.boardUser);
     }
     
+    // Check for winner:
+    state.result = checkWinner();
+
     // Re-render the board:
     render();
 }
@@ -148,7 +152,7 @@ function generateBlankBoard(gridSize) {
         
         // Create a blank row of length 'n' (n = gridSize):
         for (let i = 0; i < gridSize; i++) {
-            blankRow.push('_');
+            blankRow.push('0');
         }
         
         blankBoard.push(blankRow)
@@ -199,6 +203,26 @@ function createNumbers(gridSize) {
 }
 
 
+// Function to create the user's board (initially blank with some squares blacked out):
+function createUserBoard(gridSize) {
+    // Start with a blank board:
+    const board = generateBlankBoard(gridSize);
+
+    // Copy the blacked out squares from boardSolution:
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            if ( state.boardSolution[i][j] == '_' ) {
+                board[i][j] = '_';
+            } else {
+                board[i][j] = '';
+            }
+        }
+    }
+    
+    return board;
+}
+
+
 // Function to retrieve a random word of a given length, return the word and it's definition:
 function retrieveWord(length) {
     const word = {};
@@ -223,15 +247,29 @@ function retrieveWord(length) {
 
 // Function to chcek if the puzzle has been finished:
 function checkWinner() {
-    // NOTE: TO BE REVISED
+    // Initialize the variable to track if the puzzle is complete:
+    let result = true;
+    
+    // Compare the values from boardSolution to boardUser:
+    for (let i = 0; i < state.gridSize; i++) {
+        for (let j = 0; j < state.gridSize; j++) {
+            // If any two squares don't match, flip 'result' to false:
+            if ( state.boardSolution[i][j] != state.boardUser[i][j] ) {
+                result = false;
+            }
+        }
+    }
 
     // Check if all the words have been guessed:
-    result = state.validWords.every(word => state.correctGuesses.includes(word));
+    // result = state.validWords.every(word => state.correctGuesses.includes(word));
+
     return result ? true : null;
 }
 
 
 function render() {
+    console.table(state.boardSolution);
+    
     renderBoard();
     renderMessage();
     renderPoints();
@@ -291,10 +329,19 @@ function renderMessage() {
     // Clear out the previous message:
     elements.message.innerHTML = '';
 
-    // Create the message in a new element:
-    const text = `${state.correctGuesses.length} out of ${state.validWords.length} words`;
     messageElement = document.createElement('div');
-    messageElement.innerText = text;
+
+    // Create the message in a new element:
+    if (state.result == true) {
+        // const text = `Winner!`;
+        const messageText = 'Winner!';
+        messageElement.innerText = messageText;
+    } else {
+        // const text = `Keep trying...`;
+        const messageText = 'Keep trying...';
+        messageElement.innerText = messageText;
+    }
+    
     elements.message.appendChild(messageElement);
 }
 

@@ -1,6 +1,6 @@
 To-Do List:
 - Prevent black sqaures from being active squares (skip over on arrow keys).
-- Copy blank squares from boardSolution to boardUser.
+- Copy black squares from boardSolution to boardUser.
 - Code checkWinner function to compare the two matrices.
 - Display a message based on checkWinner.
 - Automatically move to next square when typing.
@@ -9,4 +9,3 @@ To-Do List:
 Completed:
 - Render boardUser rather than boardSolution.
 - Store user letter input to boardUser matrix.
-
