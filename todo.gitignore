@@ -1,11 +1,13 @@
 To-Do List:
-- Prevent black sqaures from being active squares (skip over on arrow keys).
-- Copy black squares from boardSolution to boardUser.
-- Code checkWinner function to compare the two matrices.
-- Display a message based on checkWinner.
 - Automatically move to next square when typing.
+- Add support for backspace key press.
+- Add support for tab key (is this necessary?).
 
 
 Completed:
 - Render boardUser rather than boardSolution.
 - Store user letter input to boardUser matrix.
+- Copy black squares from boardSolution to boardUser.
+- Code checkWinner function to compare the two matrices.
+- Display a message based on checkWinner.
+- Prevent black squares from being active squares (ignore on click, skip over on arrow keys).

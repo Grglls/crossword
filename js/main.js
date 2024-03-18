@@ -19,6 +19,8 @@ const state = {
     wordsAcross: null,
     wordsDown: null,
     activeSquare: null,
+    nextSquare: null,
+    typingDirection: null,
     // userAcross: null,
     // userDown: null,
 };
@@ -38,7 +40,6 @@ const elements = {
 elements.playAgain.addEventListener('click', init);
 elements.board.addEventListener('click', handleClick);
 document.addEventListener('keydown', handleKeypress);
-// document.addEventListener('keypress', handleLetterKeypress);
 
 
 /*------------------------- functions -------------------------*/
@@ -55,6 +56,8 @@ function init () {
     state.wordsAcross = null;
     state.wordsDown = null;
     state.activeSquare = null;
+    state.nextSquare = null;
+    state.typingDirection = 'across';
     // state.userAcross = null;
     // state.userDown = null;
     
@@ -64,10 +67,14 @@ function init () {
 
 // Function to set the highlighted square when a sqaure is clicked:
 function handleClick(event) {
+    // Convert the index number of the clicked square into i and j indices:
+    let indexJ = parseInt(event.target.id) % state.gridSize;
+    let indexI = (parseInt(event.target.id) - indexJ ) / state.gridSize;
+    
     console.log(event.target.id);
     
-    // If the id is a number, exit the function:
-    if (parseInt(event.target.id) >= 0) {
+    // Run only if the id is a number and the clicked square is not a blank square:
+    if (parseInt(event.target.id) >= 0 && state.boardUser[indexI][indexJ] != '_') {
         // Save the id of the clicked square as the active square:
         state.activeSquare = event.target.id;
         console.log(`active square is currently: ${state.activeSquare}`);
@@ -81,44 +88,56 @@ function handleClick(event) {
 // Function to handle when user types a letter or navigates using the arrow keys:
 function handleKeypress(event) {
     console.log(event.keyCode);
+    console.log(event.key);
+    console.log(event);
     // Convert the index number of the active square into i and j indices:
     let indexJ = state.activeSquare % state.gridSize;
-    let indexI = (state.activeSquare - indexJ )/ state.gridSize;
+    let indexI = (state.activeSquare - indexJ ) / state.gridSize;
     console.log(`The i index is: ${ indexI }`);
     console.log(`The j index is: ${ indexJ }`);
     
     // First handle the arrow keys, for navigation:
     if (event.keyCode >= 37 && event.keyCode <= 40) {
         console.log('Key was an arrow');
-        // Handle left arrow key:
-        if (event.keyCode == 37) {
-            if (indexJ == 0){
-                indexJ = state.gridSize - 1;
-            } else {
-                indexJ -= 1;
-            }
-            // Handle right arrow key:
-        } else if (event.keyCode == 39) {
-            if (indexJ == state.gridSize - 1) {
-                indexJ = 0;
-            } else {
-                indexJ += 1;
-            }
-            // Handle up arrow key:
-        } else if (event.keyCode == 38) {
-            if (indexI == 0) {
-                indexI = state.gridSize - 1;
-            } else {
-                indexI -= 1;
-            }
-            // Handle down arrow key:
-        } else if (event.keyCode == 40) {
-            if (indexI == state.gridSize - 1) {
-                indexI = 0;
-            } else {
-                indexI += 1;
-            }
-        } 
+        
+        // Move in the direction to the next a white square: 
+        let currentActive = '_'; // Initialize as a black square to start the while loop.
+        
+        // Loop until the next white square is found:
+        while ( currentActive == '_' ) {
+            // Handle left arrow key:
+            if (event.keyCode == 37) {
+                if (indexJ == 0){
+                    indexJ = state.gridSize - 1;
+                } else {
+                    indexJ -= 1;
+                }
+                // Handle right arrow key:
+            } else if (event.keyCode == 39) {
+                if (indexJ == state.gridSize - 1) {
+                    indexJ = 0;
+                } else {
+                    indexJ += 1;
+                }
+                // Handle up arrow key:
+            } else if (event.keyCode == 38) {
+                if (indexI == 0) {
+                    indexI = state.gridSize - 1;
+                } else {
+                    indexI -= 1;
+                }
+                // Handle down arrow key:
+            } else if (event.keyCode == 40) {
+                if (indexI == state.gridSize - 1) {
+                    indexI = 0;
+                } else {
+                    indexI += 1;
+                }
+            } 
+            
+            // Retrieve the character of the new active square:
+            currentActive = state.boardUser[indexI][indexJ];
+        }
         
         // Recalculate the active square index number:
         state.activeSquare = state.gridSize * indexI + indexJ;
@@ -132,6 +151,21 @@ function handleKeypress(event) {
         state.boardUser[indexI][indexJ] = String.fromCharCode(event.keyCode);
         
         console.table(state.boardUser);
+
+        // Invoke a ArrowRight or ArrowDown keypress to move to the next square: 
+        if (state.typingDirection == 'across') {
+            let enterEvent = new KeyboardEvent("keydown", {
+                key: "ArrowRight",
+                keyCode: 39,
+            });
+            document.dispatchEvent(enterEvent);
+        } else {
+            let enterEvent = new KeyboardEvent("keydown", {
+                key: "ArrowDown",
+                keyCode: 40,
+            });
+            document.dispatchEvent(enterEvent);
+        }
     }
     
     // Check for winner:
@@ -260,10 +294,7 @@ function checkWinner() {
         }
     }
 
-    // Check if all the words have been guessed:
-    // result = state.validWords.every(word => state.correctGuesses.includes(word));
-
-    return result ? true : null;
+    return result ? true : false;
 }
 
 
