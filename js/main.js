@@ -100,6 +100,17 @@ function handleKeypress(event) {
     if (event.keyCode >= 37 && event.keyCode <= 40) {
         console.log('Key was an arrow');
         
+        // If current typing direction is different to the arrow, then flip it:
+        if ( event.keyCode == 37 || event.keyCode == 39 ) { // across arrows
+            if ( state.typingDirection == 'down' ) {
+                state.typingDirection = 'across';
+            }
+        } else {
+            if ( state.typingDirection == 'across' ) { // up/down arrows
+                state.typingDirection = 'down';
+            }
+        }
+
         // Move in the direction to the next a white square: 
         let currentActive = '_'; // Initialize as a black square to start the while loop.
         

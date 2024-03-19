@@ -1,7 +1,9 @@
 To-Do List:
-- Automatically move to next square when typing.
+- Pull first word from the dictionary (i.e. 1 across).
 - Add support for backspace key press.
-- Add support for tab key (is this necessary?).
+- Add support for tab key (to jump between words).
+- Use arrow keys to change typing direction.
+- Highlight other sqaures in the same word.
 
 
 Completed:
@@ -11,3 +13,4 @@ Completed:
 - Code checkWinner function to compare the two matrices.
 - Display a message based on checkWinner.
 - Prevent black squares from being active squares (ignore on click, skip over on arrow keys).
+- Automatically move to next square when typing.
