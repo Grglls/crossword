@@ -312,6 +312,9 @@ function retrieveWordRegex(pattern) {
 
 
 // Function to retrieve the definition of a given word:
+function retrieveDefinition(word) {
+    return ALL_WORDS[word];
+}
 
 
 // Function to chcek if the puzzle has been finished:
