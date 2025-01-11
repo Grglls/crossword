@@ -288,6 +288,30 @@ function retrieveWord(length) {
 
     return word;
 }
+// Function to retrieve a random word that matches a given regex pattern:
+function retrieveWordRegex(pattern) {
+    const word = {};
+
+    // Save all of the words matching the regex pattern:
+    const wordsCorrectRegex = [];
+    for (let word in ALL_WORDS) {
+        if (pattern.test( word )) {
+            wordsCorrectRegex.push(word);
+            console.log(`${ word } is a word with ${ pattern } letters`);
+        };
+    };
+
+    console.log(wordsCorrectRegex);
+
+    // Pick one of the mathching words at random:
+    word['word'] = wordsCorrectRegex[ Math.floor( Math.random() * wordsCorrectRegex.length ) ];
+    word['definition'] = ALL_WORDS[word.word];
+
+    return word;
+}
+
+
+// Function to retrieve the definition of a given word:
 
 
 // Function to chcek if the puzzle has been finished:
