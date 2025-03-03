@@ -283,11 +283,47 @@ function retrieveWord(length) {
 
     console.log(wordsCorrectLength);
 
+    // Pull a random word from the words with the correct length:
+    // TO-DO: we know the key name so don't need to use square bracket notation.
+    // TO-DO: can we simplify the return to a one liner? Delete const decleration on line 278?
     word['word'] = wordsCorrectLength[ Math.floor( Math.random() * wordsCorrectLength.length ) ];
     word['definition'] = ALL_WORDS[word.word];
 
     return word;
 }
+
+
+// Function to turn an array of characters into a regex pattern:
+// TO-DO: consider if the use of underscores is best
+// TO-DO: can we use /w (alphanumeric & underscores)
+// TO-DO: do we need to allow for upper/lower case?
+function arrayToRegex(array) {
+    let patternString = '';
+    for (char of array) {
+        console.log('The character is: ', char);
+        if (char === '') {
+            patternString += '[a-z]';
+        } else {
+            patternString += char;
+        }
+    }
+    console.log('The patternString is: ', patternString);
+
+    // TO-DO: Doesn't need be interpolated (back-ticks), just pass the variable...
+    // TO-DO: double check what flags are required
+    return new RegExp(patternString, 'i');
+}
+const testArray = ['t', 'e', '', 't'];
+console.log(testArray);
+
+const testPattern = arrayToRegex(testArray);
+console.log(testPattern);
+console.log(typeof testPattern);
+
+const testWord = retrieveWordRegex(testPattern);
+console.log(testWord);
+
+
 // Function to retrieve a random word that matches a given regex pattern:
 function retrieveWordRegex(pattern) {
     const word = {};
