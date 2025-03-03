@@ -1,19 +1,21 @@
 # Crossword In Browser Game - Version 1.0
-https://grglls.github.io/Crossword/
+This project is a browser-based crossword game made using HTML, CSS and JavaScript.
 
-This project is a crossword game in a broswer made using HTML, CSS and JavaScript.
+The game adopts the Model-View-Controller (MVC) approach for the code's architecture.
 
-The game adopts the Model-View-Controller (MVC) approach for the game's architecture.
+The styling is achieved using the Tailwind CSS framework.
+
+[Try it out.](https://grglls.github.io/crossword/)
 
 ## How to Play:
-
+_Work in progress..._
 
 ## Known Bugs:
 <!-- No known bugs. -->
 
 ## Future Development:
 ### Short Term:
-* Implement board.
+* Retrieve first word for crossword.
 * Retrieve list of words.
 * Message on game end.
 
